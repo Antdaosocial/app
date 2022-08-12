@@ -1,0 +1,24 @@
+version: 2.1
+orbs:
+  node: circleci/node@4.7.0
+jobs:
+  build-and-test:
+    machine:
+      image: ubuntu-2004:202107-02
+    environment:
+      NODE_OPTIONS: "--max_old_space_size=4096"
+    steps:
+      - checkout
+      - node/install-npm:
+          version: "6"
+      - node/install-packages
+      - run: npm run lint
+      - run: npm run build
+      - run:
+          command: npm run test
+          no_output_timeout: 30m
+      - run: npm run docs
+workflows:
+  build-and-test:
+    jobs:
+      - build-and-test
